@@ -1,10 +1,7 @@
-import React from "react";
-import Compiler from "./Components/Compiler/Compiler";
-import "./Components/Compiler/Compiler.css";
-import { Component } from "react";
+import HomeComponent from "./Components/Home/Home";
 
-export default class App extends Component {
-  render() {
-    return <Compiler />;
-  }
+function App() {
+  return <HomeComponent />;
 }
+
+export default App;
