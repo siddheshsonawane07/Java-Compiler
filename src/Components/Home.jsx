@@ -1,7 +1,8 @@
-import React, { Component } from "react";
-import "./Compiler.css";
+import React, { Component, useEffect } from "react";
+import { Button, Stack, useColorMode } from "@chakra-ui/react";
+import "./Home.css";
 
-export default class Compiler extends Component {
+export default class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -98,21 +99,21 @@ export default class Compiler extends Component {
   render() {
     return (
       <>
-        <div className="row container-fluid">
-          <div className="col-6 ml-4 ">
-            <label htmlFor="solution ">
-              <span className="badge badge-info heading mt-2 ">
-                <i className="fas fa-code fa-fw fa-lg "></i> Code Here
-              </span>
-            </label>
-            <textarea
-              required
-              name="solution"
-              id="source"
-              onChange={this.input}
-              className=" source"
-              value={this.state.input}
-            ></textarea>
+    <div className="row container-fluid">
+      <div className="col-6 ml-4 ">
+        <label htmlFor="solution ">
+          <span className="badge badge-info heading mt-2 ">
+            <i className="fas fa-code fa-fw fa-lg "></i> Code Here
+          </span>
+        </label>
+        <textarea
+          required
+          name="solution"
+          id="source"
+          onChange={this.input}
+          className=" source"
+          value={this.state.input}
+        ></textarea>
             <button
               type="submit"
               className="btn btn-danger ml-2 mr-2 "
@@ -154,5 +155,30 @@ export default class Compiler extends Component {
         </div>
       </>
     );
+
+    // return (
+    //   <>
+    //     <div className="row container-fluid">
+    //       <div className="col-6 ml-4 ">
+    //         <label htmlFor="solution ">
+    //           <span className="badge badge-info heading mt-2 ">
+    //             <i className="fas fa-code fa-fw fa-lg "></i> Code Here
+    //           </span>
+    //         </label>
+    //         <textarea
+    //           required
+    //           name="solution"
+    //           id="source"
+    //           onChange={this.input}
+    //           className=" source"
+    //           value={this.state.input}
+    //         ></textarea>
+    //       </div>
+    //     </div>
+    //     <Button colorScheme="red" size="xs" onClick={this.submit}>
+    //       Submit
+    //     </Button>
+    //   </>
+    // );
   }
 }
