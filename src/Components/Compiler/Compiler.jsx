@@ -102,7 +102,7 @@ export default class Compiler extends Component {
           <div className="col-6 ml-4 ">
             <label htmlFor="solution ">
               <span className="badge badge-info heading mt-2 ">
-                <i className="fas fa-code fa-fw fa-lg"></i> Code Here
+                <i className="fas fa-code fa-fw fa-lg "></i> Code Here
               </span>
             </label>
             <textarea
