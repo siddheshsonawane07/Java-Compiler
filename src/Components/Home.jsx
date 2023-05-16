@@ -1,6 +1,10 @@
 import React, { Component, useEffect } from "react";
 import { Button, Stack, useColorMode } from "@chakra-ui/react";
 import "./Home.css";
+import logo from "./logo.png";
+import { color } from "framer-motion";
+
+
 
 export default class Home extends Component {
   constructor(props) {
@@ -16,6 +20,7 @@ export default class Home extends Component {
     event.preventDefault();
     this.setState({ input: event.target.value });
     localStorage.setItem("input", event.target.value);
+    
   };
 
   userInput = (event) => {
@@ -84,7 +89,7 @@ export default class Home extends Component {
     if (jsonGetSolution.stdout) {
       const output = atob(jsonGetSolution.stdout);
       outputText.innerHTML = "";
-      outputText.innerHTML += `Results :\n${output}\nExecution Time : ${jsonGetSolution.time} Secs\nMemory used : ${jsonGetSolution.memory} bytes`;
+      outputText.innerHTML += `${output}\nExecution Time : ${jsonGetSolution.time} Secs\nMemory used : ${jsonGetSolution.memory} bytes`;
     } else if (jsonGetSolution.stderr) {
       const error = atob(jsonGetSolution.stderr);
       outputText.innerHTML = "";
@@ -99,9 +104,29 @@ export default class Home extends Component {
   render() {
     return (
       <>
+    <header className="nav">
+      <img src={logo} alt="logo"  width={80} height={80}/>
+      <h3>Compile.IO</h3>
+    </header>
     <div className="row container-fluid">
-      <div className="col-6 ml-4 ">
-        <label htmlFor="solution ">
+      
+      <div className="col-6 ml-3 my-4 ">
+        
+        <label htmlFor="tags" className="mr-1">
+              <b className="heading">Language:</b>
+            </label>
+            <select
+              value={this.state.language_id}
+              onChange={this.language}
+              id="tags"
+              className="form-control form-inline mb-3 language"
+            >
+              <option value="54">🔥C++</option>
+              <option value="50">⚙️C</option>
+              <option value="62">💝Java</option>
+              <option value="71">🐍Python</option>
+            </select>
+            <label htmlFor="solution ">
           <span className="badge badge-info heading mt-2 ">
             <i className="fas fa-code fa-fw fa-lg "></i> Code Here
           </span>
@@ -114,45 +139,38 @@ export default class Home extends Component {
           className=" source"
           value={this.state.input}
         ></textarea>
+        
             <button
               type="submit"
-              className="btn btn-danger ml-2 mr-2 "
+              className="btn btn-danger ml-2 mr-2 cusbtn"
               onClick={this.submit}
             >
-              <i className="fas fa-cog fa-fw"></i> Run
+              <i className="fas fa-cog fa-fw"></i>Run👨‍💻
             </button>
 
-            <label htmlFor="tags" className="mr-1">
-              <b className="heading">Language:</b>
-            </label>
-            <select
-              value={this.state.language_id}
-              onChange={this.language}
-              id="tags"
-              className="form-control form-inline mb-2 language"
-            >
-              <option value="54">C++</option>
-              <option value="50">C</option>
-              <option value="62">Java</option>
-              <option value="71">Python</option>
-            </select>
-          </div>
-          <div className="col-5">
-            <div>
-              <span className="badge badge-info heading my-2 ">
-                <i className="fas fa-exclamation fa-fw fa-md"></i> Output
-              </span>
-              <textarea id="output"></textarea>
-            </div>
-          </div>
-        </div>
-        <div className="mt-2 ml-5">
+            
+      </div>
+
+
+          
+          <div className="col-1">
+          <div className="mt-3 ml-7">
           <span className="badge badge-primary heading my-2 ">
             <i className="fas fa-user fa-fw fa-md"></i> User Input
           </span>
           <br />
           <textarea id="input" onChange={this.userInput}></textarea>
         </div>
+            
+            <div>
+              <span className="badge badge-info heading my-2">
+                <i className="fas fa-exclamation fa-fw fa-md icon"></i> Output
+              </span>
+              <textarea id="output" readOnly></textarea>
+            </div>
+          </div>
+        </div>
+        
       </>
     );
 
