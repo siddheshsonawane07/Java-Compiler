@@ -1,10 +1,10 @@
-import React, { Component, useEffect } from "react";
-import { Button, Stack, useColorMode } from "@chakra-ui/react";
-import "./Home.css";
+import React, { Component } from "react";
+import "./Compiler.css";
 import logo from "./logo.png";
-import { color } from "framer-motion";
+import { Link } from "react-router-dom";
+import BlogApp from "../Blog/BlogApp";
 
-export default class Home extends Component {
+export default class Compiler extends Component {
   constructor(props) {
     super(props);
     this.state = {

@@ -1,12 +1,8 @@
-import Home from "./Components/Home";
-import { ChakraProvider } from "@chakra-ui/react";
+import BlogApp from "./Components/Blog/BlogApp";
+import Compiler from "./Components/Compiler/Compiler";
 
 function App() {
-  return (
-    <ChakraProvider>
-      <Home />;
-    </ChakraProvider>
-  );
+  return <BlogApp />;
 }
 
 export default App;
