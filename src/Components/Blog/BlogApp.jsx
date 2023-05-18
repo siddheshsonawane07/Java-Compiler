@@ -5,7 +5,7 @@ import CreatePost from "./CreatePost";
 import Login from "./Login";
 import { useState } from "react";
 import { signOut } from "firebase/auth";
-import { auth } from "./firebase-config"
+import { auth } from "./firebase-config";
 
 function BlogApp() {
   const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
@@ -14,14 +14,14 @@ function BlogApp() {
     signOut(auth).then(() => {
       localStorage.clear();
       setIsAuth(false);
-      window.location.pathname = "/login";
+      // window.location.pathname = "/login";
     });
   };
 
   return (
     <Router>
       <nav>
-        <Link to="/"> Home </Link>
+        <Link to="/blog"> Home </Link>
 
         {!isAuth ? (
           <Link to="/login"> Login </Link>

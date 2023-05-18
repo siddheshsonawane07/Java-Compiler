@@ -1,8 +1,9 @@
 import React, { Component } from "react";
 import "./Compiler.css";
 import logo from "./logo.png";
-import { Link } from "react-router-dom";
-import BlogApp from "../Blog/BlogApp";
+import { useState } from "react";
+import { signOut } from "firebase/auth";
+import { auth } from "../Blog/firebase-config";
 
 export default class Compiler extends Component {
   constructor(props) {
@@ -14,6 +15,7 @@ export default class Compiler extends Component {
       user_input: ``,
     };
   }
+
   input = (event) => {
     event.preventDefault();
     this.setState({ input: event.target.value });
@@ -99,11 +101,29 @@ export default class Compiler extends Component {
   };
 
   render() {
+
     return (
       <>
         <header className="nav">
           <img src={logo} alt="logo" width={80} height={80} />
           <h3>Compile.IO</h3>
+          {/* <Router>
+            <Link to="/blog">Blogs</Link>
+            <Link to="/blog/login">Login</Link>
+
+            <Routes>
+              <Route
+                exact
+                path="/blog"
+                element={<Home isAuth={this.state.isAuth} />}
+              />
+              <Route
+                exact
+                path="/blog/login"
+                element={<Login setIsAuth={this.setState.setIsAuth} />}
+              />
+            </Routes>
+          </Router> */}
         </header>
         <div className="row container-fluid">
           <div className="col-6 ml-3 my-4 ">
@@ -189,4 +209,16 @@ export default class Compiler extends Component {
     //   </>
     // );
   }
+}
+
+function BlogApp() {
+  const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
+
+  const signUserOut = () => {
+    signOut(auth).then(() => {
+      localStorage.clear();
+      setIsAuth(false);
+      window.location.pathname = "/blog/login";
+    });
+  };
 }

@@ -19,7 +19,6 @@ function CreatePost({ isAuth }) {
     navigate("/");
   };
 
-  // eslint-disable-next-line
   useEffect(() => {
     if (!isAuth) {
       navigate("/login");

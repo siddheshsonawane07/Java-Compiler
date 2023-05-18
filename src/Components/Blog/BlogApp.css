@@ -41,9 +41,7 @@ a {
   width: 500px;
   height: auto;
   padding: 20px;
-  color: white;
-  border-radius: 12px;
-  color: white;
+  color: black;
   display: flex;
   flex-direction: column;
 }
@@ -59,6 +57,7 @@ a {
   margin-top: 30px;
   display: flex;
   flex-direction: column;
+  color: black;
 }
 
 .inputGp input,
@@ -170,7 +169,7 @@ textarea {
   display: flex;
   justify-content: left;
   width: 100%;
-  color: white;
+  color: black;
 }
 
 .postHeader .title {
@@ -188,7 +187,7 @@ textarea {
 .deletePost button {
   border: none;
   background: none;
-  font-size: 30px;
+  font-size: 25px;
   cursor: pointer;
   color: white;
 }
