@@ -14,15 +14,13 @@ function BlogApp() {
     signOut(auth).then(() => {
       localStorage.clear();
       setIsAuth(false);
-      // window.location.pathname = "/login";
+      window.location.pathname = "/";
     });
   };
 
   return (
     <Router>
       <nav>
-        <Link to="/blog"> Home </Link>
-
         {!isAuth ? (
           <Link to="/login"> Login </Link>
         ) : (
