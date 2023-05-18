@@ -1,12 +1,11 @@
-import React, { Component, useEffect } from "react";
-import { Button, Stack, useColorMode } from "@chakra-ui/react";
-import "./Home.css";
+import React, { Component } from "react";
+import "./Compiler.css";
 import logo from "./logo.png";
-import { color } from "framer-motion";
+import { useState } from "react";
+import { signOut } from "firebase/auth";
+import { auth } from "../Blog/firebase-config";
 
-
-
-export default class Home extends Component {
+export default class Compiler extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -16,11 +15,11 @@ export default class Home extends Component {
       user_input: ``,
     };
   }
+
   input = (event) => {
     event.preventDefault();
     this.setState({ input: event.target.value });
     localStorage.setItem("input", event.target.value);
-    
   };
 
   userInput = (event) => {
@@ -102,17 +101,33 @@ export default class Home extends Component {
   };
 
   render() {
+
     return (
       <>
-    <header className="nav">
-      <img src={logo} alt="logo"  width={80} height={80}/>
-      <h3>Compile.IO</h3>
-    </header>
-    <div className="row container-fluid">
-      
-      <div className="col-6 ml-3 my-4 ">
-        
-        <label htmlFor="tags" className="mr-1">
+        <header className="nav">
+          <img src={logo} alt="logo" width={80} height={80} />
+          <h3>Compile.IO</h3>
+          {/* <Router>
+            <Link to="/blog">Blogs</Link>
+            <Link to="/blog/login">Login</Link>
+
+            <Routes>
+              <Route
+                exact
+                path="/blog"
+                element={<Home isAuth={this.state.isAuth} />}
+              />
+              <Route
+                exact
+                path="/blog/login"
+                element={<Login setIsAuth={this.setState.setIsAuth} />}
+              />
+            </Routes>
+          </Router> */}
+        </header>
+        <div className="row container-fluid">
+          <div className="col-6 ml-3 my-4 ">
+            <label htmlFor="tags" className="mr-1">
               <b className="heading">Language:</b>
             </label>
             <select
@@ -127,19 +142,19 @@ export default class Home extends Component {
               <option value="71">🐍Python</option>
             </select>
             <label htmlFor="solution ">
-          <span className="badge badge-info heading mt-2 ">
-            <i className="fas fa-code fa-fw fa-lg "></i> Code Here
-          </span>
-        </label>
-        <textarea
-          required
-          name="solution"
-          id="source"
-          onChange={this.input}
-          className=" source"
-          value={this.state.input}
-        ></textarea>
-        
+              <span className="badge badge-info heading mt-2 ">
+                <i className="fas fa-code fa-fw fa-lg "></i> Code Here
+              </span>
+            </label>
+            <textarea
+              required
+              name="solution"
+              id="source"
+              onChange={this.input}
+              className=" source"
+              value={this.state.input}
+            ></textarea>
+
             <button
               type="submit"
               className="btn btn-danger ml-2 mr-2 cusbtn"
@@ -147,21 +162,17 @@ export default class Home extends Component {
             >
               <i className="fas fa-cog fa-fw"></i>Run👨‍💻
             </button>
+          </div>
 
-            
-      </div>
-
-
-          
           <div className="col-1">
-          <div className="mt-3 ml-7">
-          <span className="badge badge-primary heading my-2 ">
-            <i className="fas fa-user fa-fw fa-md"></i> User Input
-          </span>
-          <br />
-          <textarea id="input" onChange={this.userInput}></textarea>
-        </div>
-            
+            <div className="mt-3 ml-7">
+              <span className="badge badge-primary heading my-2 ">
+                <i className="fas fa-user fa-fw fa-md"></i> User Input
+              </span>
+              <br />
+              <textarea id="input" onChange={this.userInput}></textarea>
+            </div>
+
             <div>
               <span className="badge badge-info heading my-2">
                 <i className="fas fa-exclamation fa-fw fa-md icon"></i> Output
@@ -170,7 +181,6 @@ export default class Home extends Component {
             </div>
           </div>
         </div>
-        
       </>
     );
 
@@ -199,4 +209,16 @@ export default class Home extends Component {
     //   </>
     // );
   }
+}
+
+function BlogApp() {
+  const [isAuth, setIsAuth] = useState(localStorage.getItem("isAuth"));
+
+  const signUserOut = () => {
+    signOut(auth).then(() => {
+      localStorage.clear();
+      setIsAuth(false);
+      window.location.pathname = "/blog/login";
+    });
+  };
 }
