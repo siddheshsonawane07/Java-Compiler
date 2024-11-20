@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createSubmission, pollSubmission, parseSubmissionResult } from '../api/api';
 import '../Compiler.css';
 
 const Compiler = () => {
@@ -7,11 +8,14 @@ const Compiler = () => {
   const [languageId, setLanguageId] = useState(localStorage.getItem('language_Id') || '71');
   const [userInput, setUserInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [theme, setTheme] = useState(localStorage.getItem('theme') || 'light');
 
   useEffect(() => {
     localStorage.setItem('input', input);
     localStorage.setItem('language_Id', languageId);
-  }, [input, languageId]);
+    localStorage.setItem('theme', theme);
+    document.body.className = theme + '-theme';
+  }, [input, languageId, theme]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,74 +23,49 @@ const Compiler = () => {
     setOutput('Creating Submission...\n');
 
     try {
-      const submissionResponse = await fetch(
-        "https://judge0-ce.p.rapidapi.com/submissions",
-        {
-          method: "POST",
-          headers: {
-            "X-RapidAPI-Key": "28f783f3dfmshbadde7ef66eb474p163aafjsnfc1c6dc36351",
-            "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
-            "content-type": "application/json",
-            "accept": "application/json",
-          },
-          body: JSON.stringify({
-            source_code: input,
-            stdin: userInput,
-            language_id: languageId,
-          }),
-        }
-      );
-
-      const jsonResponse = await submissionResponse.json();
-      let result = await pollSubmission(jsonResponse.token);
+      const token = await createSubmission(input, languageId, userInput);
+      // console.log(input, languageId, userInput);
       
-      setIsLoading(false);
-      handleSubmissionResult(result);
+      const result = await pollSubmission(token);
+      const submissionResult = parseSubmissionResult(result);
+
+      switch(submissionResult.type) {
+        case 'success':
+          setOutput(`${submissionResult.output}\nExecution Time: ${submissionResult.executionTime} Secs\nMemory Used: ${submissionResult.memoryUsed} bytes`);
+          break;
+        case 'error':
+        case 'compileError':
+          setOutput(submissionResult.message);
+          break;
+        default:
+          setOutput('Unexpected execution result');
+      }
     } catch (error) {
       setOutput(`Error: ${error.message}`);
+    } finally {
       setIsLoading(false);
     }
   };
 
-  const pollSubmission = async (token) => {
-    while (true) {
-      const response = await fetch(
-        `https://judge0-ce.p.rapidapi.com/submissions/${token}?base64_encoded=true`,
-        {
-          method: "GET",
-          headers: {
-            "X-RapidAPI-Key": "28f783f3dfmshbadde7ef66eb474p163aafjsnfc1c6dc36351",
-            "X-RapidAPI-Host": "judge0-ce.p.rapidapi.com",
-          },
-        }
-      );
-      
-      const result = await response.json();
-      
-      if (['Accepted', 'Rejected', 'Error'].includes(result.status.description)) {
-        return result;
-      }
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
-    }
-  };
-
-  const handleSubmissionResult = (result) => {
-    if (result.stdout) {
-      const output = atob(result.stdout);
-      setOutput(`${output}\nExecution Time: ${result.time} Secs\nMemory Used: ${result.memory} bytes`);
-    } else if (result.stderr) {
-      setOutput(`Error: ${atob(result.stderr)}`);
-    } else if (result.compile_output) {
-      setOutput(`Compilation Error: ${atob(result.compile_output)}`);
-    }
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
   };
 
   return (
-    <div className="compiler-container">
+    <div className={`compiler-container ${theme}-theme`}>
       <header>
         <h1>Compile.IO</h1>
+        <div className="theme-toggle-container">
+          <button 
+            className="theme-toggle-btn"
+            onClick={toggleTheme}
+          >
+            {theme === 'light' ? '🌙' : '☀️'}
+          </button>
+        </div>
       </header>
+      
       <div className="compiler-grid">
         <div className="code-section">
           <div className="language-selector">
@@ -101,12 +80,14 @@ const Compiler = () => {
               <option value="71">Python</option>
             </select>
           </div>
+          
           <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder="Write your code here..."
             className="code-input"
           />
+          
           <button 
             onClick={handleSubmit} 
             disabled={isLoading}
@@ -115,6 +96,7 @@ const Compiler = () => {
             {isLoading ? 'Running...' : 'Run Code'}
           </button>
         </div>
+        
         <div className="io-section">
           <div className="input-container">
             <label>User Input:</label>
@@ -124,6 +106,7 @@ const Compiler = () => {
               placeholder="Enter input (optional)"
             />
           </div>
+          
           <div className="output-container">
             <label>Output:</label>
             <textarea
